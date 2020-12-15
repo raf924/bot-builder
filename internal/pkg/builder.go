@@ -2,10 +2,12 @@ package pkg
 
 import (
 	"bytes"
+	"github.com/raf924/bot-builder/internal/pkg/templates"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go/format"
 	"gopkg.in/yaml.v2"
+	"io/ioutil"
 	"os"
 	"text/template"
 )
@@ -24,7 +26,16 @@ func MakeCommand(command, templateFile string, config interface{}) *cobra.Comman
 			if err := yaml.NewDecoder(f).Decode(config); err != nil {
 				return err
 			}
-			tpl, err := template.ParseFiles(templateFile)
+			tF, err := templates.Templates.Open(templateFile)
+			if err != nil {
+				return err
+			}
+			templateData, err := ioutil.ReadAll(tF)
+			if err != nil {
+				return err
+			}
+			tpl := template.New(command)
+			tpl, err = tpl.Parse(string(templateData))
 			if err != nil {
 				return err
 			}

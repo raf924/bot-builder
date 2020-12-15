@@ -1,6 +1,8 @@
 package main
 
-import "github.com/raf924/bot-builder/internal/pkg"
+import (
+	"github.com/raf924/bot-builder/internal/pkg"
+)
 
 type botConfig struct {
 	BotRelay   string   `yaml:"botRelay"`
