@@ -1,5 +1,5 @@
 {{- /*gotype: github.com/raf924/bot-builder/cmd/bot-builder.connectorConfig*/ -}}
-//go:generate go get github.com/raf924/bot
+//go:generate go get github.com/raf924/bot/...
 //go:generate go get {{ .BotRelay }}
 //go:generate go get {{ .ConnectionRelay }}
 package main
