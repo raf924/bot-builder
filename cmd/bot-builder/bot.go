@@ -10,5 +10,5 @@ type botConfig struct {
 }
 
 func init() {
-	rootCmd.AddCommand(pkg.MakeCommand("bot", "bot.tpl", &botConfig{}))
+	rootCmd.AddCommand(pkg.MakeCommand("bot", "bot.go.tpl", &botConfig{}))
 }

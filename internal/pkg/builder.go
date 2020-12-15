@@ -12,7 +12,7 @@ import (
 	"text/template"
 )
 
-func MakeCommand(command, templateFile string, config interface{}) *cobra.Command {
+func MakeCommand(command, goTemplateFile string, config interface{}) *cobra.Command {
 	cmd := &cobra.Command{
 		Use: command,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -26,7 +26,7 @@ func MakeCommand(command, templateFile string, config interface{}) *cobra.Comman
 			if err := yaml.NewDecoder(f).Decode(config); err != nil {
 				return err
 			}
-			tF, err := templates.Templates.Open(templateFile)
+			tF, err := templates.Templates.Open(goTemplateFile)
 			if err != nil {
 				return err
 			}
@@ -34,8 +34,8 @@ func MakeCommand(command, templateFile string, config interface{}) *cobra.Comman
 			if err != nil {
 				return err
 			}
-			tpl := template.New(command)
-			tpl, err = tpl.Parse(string(templateData))
+			goTpl := template.New("main.go")
+			goTpl, err = goTpl.Parse(string(templateData))
 			if err != nil {
 				return err
 			}
@@ -45,7 +45,7 @@ func MakeCommand(command, templateFile string, config interface{}) *cobra.Comman
 			if err != nil {
 				return err
 			}
-			err = tpl.Execute(b, config)
+			err = goTpl.Execute(b, config)
 			if err != nil {
 				return err
 			}

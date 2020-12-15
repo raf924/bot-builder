@@ -1,4 +1,10 @@
 {{- /*gotype: github.com/raf924/bot-builder/cmd/bot-builder.botConfig*/ -}}
+//go:generate go get github.com/raf924/bot
+//go:generate go get {{ .BotRelay }}
+{{ range .CmdModules}}
+//go:generate go get {{ . }}
+{{ end }}
+
 package main
 
 import (

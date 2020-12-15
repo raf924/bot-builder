@@ -10,5 +10,5 @@ type connectorConfig struct {
 }
 
 func init() {
-	rootCmd.AddCommand(pkg.MakeCommand("connector", "connector.tpl", &connectorConfig{}))
+	rootCmd.AddCommand(pkg.MakeCommand("connector", "connector.go.tpl", &connectorConfig{}))
 }
