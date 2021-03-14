@@ -1,18 +1,30 @@
 package pkg
 
 import (
-	"bytes"
-	"github.com/raf924/bot-builder/internal/pkg/templates"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go/format"
 	"gopkg.in/yaml.v2"
-	"io/ioutil"
 	"os"
-	"text/template"
 )
 
-func MakeCommand(command, goTemplateFile string, config interface{}) *cobra.Command {
+type ConfigTemplate interface {
+	Template() ([]byte, error)
+}
+
+func Build(config ConfigTemplate) ([]byte, error) {
+	b, err := config.Template()
+	if err != nil {
+		return nil, err
+	}
+	source, err := format.Source(b)
+	if err != nil {
+		return nil, err
+	}
+	return source, nil
+}
+
+func MakeBuilderCommand(command string, config ConfigTemplate) *cobra.Command {
 	cmd := &cobra.Command{
 		Use: command,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -26,34 +38,15 @@ func MakeCommand(command, goTemplateFile string, config interface{}) *cobra.Comm
 			if err := yaml.NewDecoder(f).Decode(config); err != nil {
 				return err
 			}
-			tF, err := templates.Templates.Open(goTemplateFile)
+			source, err := Build(config)
 			if err != nil {
 				return err
 			}
-			templateData, err := ioutil.ReadAll(tF)
-			if err != nil {
-				return err
-			}
-			goTpl := template.New("main.go")
-			goTpl, err = goTpl.Parse(string(templateData))
-			if err != nil {
-				return err
-			}
-			_ = f.Close()
-			b := bytes.NewBuffer([]byte{})
 			f, err = os.Create(output)
 			if err != nil {
 				return err
 			}
-			err = goTpl.Execute(b, config)
-			if err != nil {
-				return err
-			}
-			btes, err := format.Source(b.Bytes())
-			if err != nil {
-				return err
-			}
-			_, err = f.Write(btes)
+			_, err = f.Write(source)
 			if err != nil {
 				return err
 			}
