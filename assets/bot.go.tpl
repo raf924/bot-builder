@@ -1,18 +1,9 @@
-{{- /*gotype: github.com/raf924/bot-builder/cmd/bot-builder.botConfig*/ -}}
-//go:generate go get github.com/raf924/bot/...
-//go:generate go get {{ .BotRelay }}
-{{ range .CmdModules}}
-//go:generate go get {{ . }}
-{{ end }}
-
+{{ if false }}
 package main
+{{ end }}
 
 import (
 "flag"
-_ "{{ .BotRelay }}"
-{{ range .CmdModules}}
-_ "{{.}}"
-{{end}}
 "github.com/raf924/bot/pkg/bot"
 botConfig "github.com/raf924/bot/pkg/config/bot"
 "gopkg.in/yaml.v2"

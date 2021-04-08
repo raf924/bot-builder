@@ -1,8 +1,6 @@
-{{- /*gotype: github.com/raf924/bot-builder/cmd/bot-builder.connectorConfig*/ -}}
-//go:generate go get github.com/raf924/bot/...
-//go:generate go get {{ .BotRelay }}
-//go:generate go get {{ .ConnectionRelay }}
+{{ if false }}
 package main
+{{ end }}
 
 import (
     "flag"
@@ -10,8 +8,6 @@ import (
     "os"
     cnf "github.com/raf924/bot/pkg/config/connector"
     "github.com/raf924/bot/pkg/connector"
-    _ "{{ .BotRelay }}"
-    _ "{{ .ConnectionRelay }}"
 )
 
 func main() {

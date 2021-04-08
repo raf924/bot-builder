@@ -1,44 +1,59 @@
 package pkg
 
 import (
+	"bytes"
+	"fmt"
+	botbuilder "github.com/raf924/bot-builder"
+	"github.com/raf924/bot-builder/internal/pkg/recipe"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"go/format"
 	"gopkg.in/yaml.v2"
+	"io"
 	"os"
+	"text/template"
 )
 
-type ConfigTemplate interface {
-	Template() ([]byte, error)
+var DependencyTemplate = template.Must(template.ParseFS(botbuilder.Templates, "assets/deps.go.tpl"))
+
+func Build(r recipe.Recipe) ([]byte, error) {
+	tpl, err := template.ParseFS(botbuilder.Templates, r.TemplatePattern())
+	if err != nil {
+		return nil, fmt.Errorf("template error: %s", err.Error())
+	}
+	buffer := bytes.NewBuffer([]byte{})
+	err = BuildDependencies(buffer, r)
+	if err != nil {
+		return nil, fmt.Errorf("template error: %s", err.Error())
+	}
+	err = tpl.Execute(buffer, nil)
+	if err != nil {
+		return nil, fmt.Errorf("template error: %s", err.Error())
+	}
+	b, err := format.Source(buffer.Bytes())
+	if err != nil {
+		return nil, fmt.Errorf("formatting error: %s", err.Error())
+	}
+	return b, nil
 }
 
-func Build(config ConfigTemplate) ([]byte, error) {
-	b, err := config.Template()
-	if err != nil {
-		return nil, err
-	}
-	source, err := format.Source(b)
-	if err != nil {
-		return nil, err
-	}
-	return source, nil
+func BuildDependencies(writer io.Writer, recipe recipe.Recipe) error {
+	return DependencyTemplate.ExecuteTemplate(writer, "dependencies", recipe)
 }
 
-func MakeBuilderCommand(command string, config ConfigTemplate) *cobra.Command {
+func MakeBuilderCommand(command string, recipe recipe.Recipe) *cobra.Command {
 	cmd := &cobra.Command{
 		Use: command,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			_ = viper.BindPFlags(cmd.Flags())
-			configFile := viper.GetString("config")
-			output := viper.GetString("output")
+			configFile := cmd.Flag("recipe").Value.String()
+			output := cmd.Flag("output").Value.String()
 			f, err := os.Open(configFile)
 			if err != nil {
 				return err
 			}
-			if err := yaml.NewDecoder(f).Decode(config); err != nil {
+			if err := yaml.NewDecoder(f).Decode(recipe); err != nil {
 				return err
 			}
-			source, err := Build(config)
+			source, err := Build(recipe)
 			if err != nil {
 				return err
 			}
@@ -54,8 +69,5 @@ func MakeBuilderCommand(command string, config ConfigTemplate) *cobra.Command {
 			return nil
 		},
 	}
-	fS := cmd.Flags()
-	fS.StringP("config", "c", "config.yaml", "")
-	fS.StringP("output", "o", "dist/connector.go", "")
 	return cmd
 }

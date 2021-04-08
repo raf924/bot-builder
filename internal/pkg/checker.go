@@ -6,8 +6,8 @@ import (
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/go-git/go-git/v5/storage/memory"
+	"github.com/raf924/bot-builder/internal/pkg/recipe"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"gopkg.in/yaml.v2"
 	"io"
 	"os"
@@ -15,17 +15,12 @@ import (
 	"sync"
 )
 
-type ConfigToDeps interface {
-	Deps() []string
-}
-
-func MakeCheckerCommand(command string, config ConfigToDeps) *cobra.Command {
+func MakeCheckerCommand(command string, config recipe.Recipe) *cobra.Command {
 	cmd := &cobra.Command{
 		Use: command,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			_ = viper.BindPFlags(cmd.Flags())
-			configFile := viper.GetString("config")
-			hashFile := viper.GetString("hashFile")
+			configFile := cmd.Flag("recipe").Value.String()
+			hashFile := cmd.Flag("hashFile").Value.String()
 			f, err := os.Open(configFile)
 			if err != nil {
 				return err
@@ -60,12 +55,11 @@ func MakeCheckerCommand(command string, config ConfigToDeps) *cobra.Command {
 		},
 	}
 	fS := cmd.Flags()
-	fS.StringP("config", "c", "config.yaml", "")
 	fS.StringP("hashFile", "f", "dependencies", "")
 	return cmd
 }
 
-func CheckDependencies(ctp ConfigToDeps) ([]string, error) {
+func CheckDependencies(ctp recipe.Recipe) ([]string, error) {
 	deps := ctp.Deps()
 	hashes := []plumbing.Hash{}
 	var wg sync.WaitGroup
@@ -79,7 +73,7 @@ func CheckDependencies(ctp ConfigToDeps) ([]string, error) {
 		go func() {
 			defer wg.Done()
 			repo, err := git.Clone(memory.NewStorage(), nil, &git.CloneOptions{
-				URL:           dep,
+				URL:           dep.Path,
 				Auth:          auth,
 				ReferenceName: "master",
 				SingleBranch:  true,
