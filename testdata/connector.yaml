@@ -1,0 +1,3 @@
+version: latest
+botRelay: github.com/raf924/bot-grpc-relay
+connectionRelay: github.com/raf924/hc-connection-relay
