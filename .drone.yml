@@ -10,7 +10,7 @@ steps:
   - name: bot-builder
     image: plugins/docker
     settings:
-      repo: raf924/bot-builder
+      repo: raf924/relay-builder
       auto_tag: true
       username:
         from_secret: docker_username
