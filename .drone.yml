@@ -1,0 +1,18 @@
+kind: pipeline
+type: docker
+name: bot-builder
+
+trigger:
+  event:
+    - tag
+
+steps:
+  - name: bot-builder
+    image: plugins/docker
+    settings:
+      repo: raf924/bot-builder
+      auto_tag: true
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_token
