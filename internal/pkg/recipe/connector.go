@@ -1,9 +1,10 @@
 package recipe
 
 type ConnectorRecipe struct {
-	Version         string     `yaml:"version"`
-	BotRelay        Dependency `yaml:"botRelay"`
-	ConnectionRelay Dependency `yaml:"connectionRelay"`
+	Version         string       `yaml:"version"`
+	BotRelay        Dependency   `yaml:"botRelay"`
+	ConnectionRelay Dependency   `yaml:"connectionRelay"`
+	CmdModules      []Dependency `yaml:"cmdModules"`
 }
 
 func (c *ConnectorRecipe) TemplatePattern() string {
@@ -11,8 +12,8 @@ func (c *ConnectorRecipe) TemplatePattern() string {
 }
 
 func (c *ConnectorRecipe) Deps() []Dependency {
-	return []Dependency{{yamlDependency{
+	return append([]Dependency{{yamlDependency{
 		Path:    "github.com/raf924/bot",
 		Version: c.Version,
-	}}, c.BotRelay, c.ConnectionRelay}
+	}}, c.BotRelay, c.ConnectionRelay}, c.CmdModules...)
 }
