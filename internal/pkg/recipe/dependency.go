@@ -1,8 +1,11 @@
 package recipe
 
 import (
+	"gopkg.in/yaml.v2"
 	"strings"
 )
+
+var _ yaml.Unmarshaler = (*Dependency)(nil)
 
 type Dependency struct {
 	yamlDependency
@@ -36,6 +39,9 @@ func (d *Dependency) UnmarshalYAML(unmarshal func(interface{}) error) error {
 }
 
 func Module(path string, version string) Dependency {
+	if version == "" {
+		version = "latest"
+	}
 	return Dependency{yamlDependency{
 		Path:    path,
 		Version: version,

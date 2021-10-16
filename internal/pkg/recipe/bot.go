@@ -11,8 +11,6 @@ func (b *BotRecipe) TemplatePattern() string {
 }
 
 func (b *BotRecipe) Deps() []Dependency {
-	return append([]Dependency{{yamlDependency{
-		Path:    "github.com/raf924/bot",
-		Version: b.Version,
-	}}, b.BotRelay}, b.CmdModules...)
+	botDependency := Module("github.com/raf924/bot", b.Version)
+	return append([]Dependency{botDependency, b.BotRelay}, b.CmdModules...)
 }

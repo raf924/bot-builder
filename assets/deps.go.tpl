@@ -7,6 +7,9 @@ package main
 {{ end }}
 //go:generate go mod tidy
 import (
-{{ range .Deps }}_ "{{.Path}}"
-{{ end }})
+{{- /*gotype: github.com/raf924/bot-builder/internal/pkg/recipe.Recipe*/ -}}
+{{ range .Deps }}
+_ "{{.Path}}"
+{{ end }}
+)
 {{end}}
