@@ -10,6 +10,7 @@ import (
     "log"
     "os"
     "time"
+	"context"
 )
 
 func main() {
@@ -30,7 +31,7 @@ func main() {
     }
     hcBot := bot.NewBot(config)
     for {
-        if err = hcBot.Start(); err != nil {
+        if err = hcBot.Start(context.Background()); err != nil {
             panic(err)
         }
         <-hcBot.Done()

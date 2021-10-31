@@ -9,6 +9,7 @@ import (
     "gopkg.in/yaml.v2"
     "log"
     "os"
+	"context"
 )
 
 func main() {
@@ -33,7 +34,7 @@ func main() {
         log.Println("Connector quit with error: no connector created")
         os.Exit(1)
     }
-    if err = hcConnector.Start(); err != nil {
+    if err = hcConnector.Start(context.Background()); err != nil {
         log.Println("Connector quit with error: %v", err)
         os.Exit(1)
     }
