@@ -3,14 +3,14 @@ package main
 {{ end }}
 
 import (
-    "flag"
-    "github.com/raf924/bot/pkg/bot"
-    botConfig "github.com/raf924/bot/pkg/config/bot"
-    "gopkg.in/yaml.v2"
-    "log"
-    "os"
-    "time"
-	"context"
+"flag"
+"github.com/raf924/bot/v2/pkg/bot"
+botConfig "github.com/raf924/bot/v2/pkg/config/bot"
+"gopkg.in/yaml.v2"
+"log"
+"os"
+"time"
+"context"
 )
 
 func main() {

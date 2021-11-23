@@ -4,11 +4,11 @@ package main
 
 import (
     "flag"
-    cnf "github.com/raf924/bot/pkg/config/connector"
-    "github.com/raf924/bot/pkg/connector"
     "gopkg.in/yaml.v2"
-    "log"
     "os"
+    cnf "github.com/raf924/bot/v2/pkg/config/connector"
+    "github.com/raf924/bot/v2/pkg/connector"
+	"log"
 	"context"
 )
 

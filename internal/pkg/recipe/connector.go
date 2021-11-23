@@ -12,5 +12,5 @@ func (c *ConnectorRecipe) TemplatePattern() string {
 }
 
 func (c *ConnectorRecipe) Deps() []Dependency {
-	return append([]Dependency{Module("github.com/raf924/bot", c.Version), c.BotRelay, c.ConnectionRelay}, c.CmdModules...)
+	return append([]Dependency{Module("github.com/raf924/bot/v2", c.Version), c.BotRelay, c.ConnectionRelay}, c.CmdModules...)
 }
