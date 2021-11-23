@@ -3,8 +3,8 @@ package pkg
 import (
 	"bytes"
 	"fmt"
-	botbuilder "github.com/raf924/bot-builder"
-	"github.com/raf924/bot-builder/internal/pkg/recipe"
+	botbuilder "github.com/raf924/bot-builder/v2"
+	"github.com/raf924/bot-builder/v2/internal/pkg/recipe"
 	"github.com/spf13/cobra"
 	"go/format"
 	"gopkg.in/yaml.v2"

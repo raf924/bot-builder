@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/raf924/bot-builder/internal/pkg"
-	"github.com/raf924/bot-builder/internal/pkg/recipe"
+	"github.com/raf924/bot-builder/v2/internal/pkg"
+	"github.com/raf924/bot-builder/v2/internal/pkg/recipe"
 )
 
 func init() {
